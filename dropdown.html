@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reading Status Dropdown</title>
+
+  <!-- Web Awesome Theme -->
+  <link rel="stylesheet" href="/@awesome.me/webawesome/dist/themes/default.css">
+
+  <link rel="stylesheet" href="./styles/index.css">
+
+  <style>
+    body {
+      padding: 48px;
+    }
+
+    /* Hide the date selector by default */
+    .date-selector.hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="dropdown-container">
+      <div class="reading-status-dropdown">
+        <wa-button-group label="Reading Status">
+          <wa-button id="status-button" size="small">Want to Read</wa-button>
+          <wa-dropdown id="reading-status" size="small" placement="bottom-end">
+            <wa-button slot="trigger" size="small">
+              <wa-icon name="chevron-down" label="More options"></wa-icon>
+            </wa-button>
+
+            <wa-dropdown-item value="currently-reading">
+              Currently Reading
+            </wa-dropdown-item>
+            <wa-dropdown-item value="already-read">
+              Already Read
+            </wa-dropdown-item>
+
+            <wa-divider></wa-divider>
+
+            <div style="padding: 0.5rem 1rem;">
+              <wa-checkbox size="small">Use this work</wa-checkbox>
+            </div>
+
+            <wa-dropdown-item value="create-new-list">
+              Create a new list
+            </wa-dropdown-item>
+          </wa-dropdown>
+        </wa-button-group>
+
+        <!-- Date Selector (shown when Already Read is selected) -->
+        <div id="date-selector" class="date-selector hidden">
+          <p class="date-selector-title">When did you finish this book?</p>
+          <div class="date-options">
+            <wa-button variant="default" class="date-option" data-year="2025" size="small">2025</wa-button>
+            <wa-button variant="default" class="date-option" data-year="today" size="small">Today</wa-button>
+            <wa-button variant="default" class="date-option" data-year="other" size="small">Other</wa-button>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- Initialize Web Awesome -->
+  <script type="module">
+    import { setBasePath, registerIconLibrary } from '@awesome.me/webawesome/dist/webawesome.js';
+
+    // Set base path for assets
+    setBasePath('/@awesome.me/webawesome/dist');
+
+    // Register Font Awesome
+    registerIconLibrary('fa', {
+      resolver: name => {
+        const filename = name.replace(/^fa[rbs]-/, '');
+        let folder = 'regular';
+        if (name.substring(0, 4) === 'fas-') folder = 'solid';
+        if (name.substring(0, 4) === 'fab-') folder = 'brands';
+        return `https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/svgs/${folder}/${filename}.svg`;
+      },
+      mutator: svg => svg.setAttribute('fill', 'currentColor')
+    });
+
+    // Import components
+    import '@awesome.me/webawesome/dist/components/icon/icon.js';
+    import '@awesome.me/webawesome/dist/components/button/button.js';
+    import '@awesome.me/webawesome/dist/components/button-group/button-group.js';
+    import '@awesome.me/webawesome/dist/components/checkbox/checkbox.js';
+    import '@awesome.me/webawesome/dist/components/dropdown/dropdown.js';
+    import '@awesome.me/webawesome/dist/components/dropdown-item/dropdown-item.js';
+    import '@awesome.me/webawesome/dist/components/divider/divider.js';
+
+    console.log('✅ Web Awesome loaded');
+
+    // Wait for components to be defined
+    await customElements.whenDefined('wa-dropdown');
+    await customElements.whenDefined('wa-button');
+
+    // Handle dropdown selection
+    const dropdown = document.getElementById('reading-status');
+    const statusButton = document.getElementById('status-button');
+    const dateSelector = document.getElementById('date-selector');
+
+    // Handle main button click (left side of split button)
+    statusButton.addEventListener('click', () => {
+      console.log('Main button clicked - current status:', statusButton.textContent);
+      // TODO: Add your action here (e.g., save current reading status)
+    });
+
+    // Handle dropdown selection (right side of split button)
+    dropdown.addEventListener('wa-select', event => {
+      const item = event.detail.item;
+      const value = item.value;
+
+      // Update button text based on selection
+      switch(value) {
+        case 'currently-reading':
+          statusButton.textContent = 'Currently Reading';
+          dateSelector.classList.add('hidden');
+          break;
+        case 'already-read':
+          statusButton.textContent = '✓ Already Read';
+          dateSelector.classList.remove('hidden');
+          break;
+        case 'create-new-list':
+          statusButton.textContent = 'Want to Read';
+          dateSelector.classList.add('hidden');
+          break;
+        case 'use-this-work':
+          // For checkbox items, don't change the main button text
+          // just keep current state
+          break;
+        default:
+          statusButton.textContent = 'Want to Read';
+          dateSelector.classList.add('hidden');
+      }
+    });
+
+    // Handle date option clicks
+    const dateOptions = document.querySelectorAll('.date-option');
+    dateOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        console.log('Selected date option:', option.textContent);
+        // Reset all buttons to default variant
+        dateOptions.forEach(opt => opt.setAttribute('variant', 'default'));
+        // Set clicked button to brand variant
+        option.setAttribute('variant', 'brand');
+      });
+    });
+  </script>
+</body>
+</html>
+
