@@ -35,40 +35,92 @@
     </div>
   </div>
 
-  <!-- Input -->
-  <div class="demo-section">
-    <h2>Input</h2>
-    <wa-input placeholder="Enter your name" clearable>
-      <wa-icon name="user" library="fa" slot="prefix"></wa-icon>
-    </wa-input>
-  </div>
 
-  <!-- Avatar -->
+  <!-- Dropdown -->
   <div class="demo-section">
-    <h2>Avatar</h2>
+    <h2>Dropdown</h2>
     <div class="component-row">
-      <wa-avatar initials="LD" style="--size: 3rem;"></wa-avatar>
-      <wa-avatar initials="AB" style="--size: 3rem;"></wa-avatar>
-      <wa-avatar initials="XY" style="--size: 3rem;"></wa-avatar>
+      <wa-dropdown>
+        <wa-button slot="trigger" with-caret>Edit</wa-button>
+
+        <div style="padding: 0.5rem 1rem;">
+          <label for="dropdown-input" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--wa-color-neutral-700);">Search:</label>
+          <wa-input id="dropdown-input" placeholder="Type to search..." size="small"></wa-input>
+        </div>
+        <wa-divider></wa-divider>
+
+        <wa-dropdown-item value="cut">
+          <wa-icon slot="icon" name="scissors"></wa-icon>
+          Cut
+        </wa-dropdown-item>
+        <wa-dropdown-item value="copy">
+          <wa-icon slot="icon" name="copy"></wa-icon>
+          Copy
+        </wa-dropdown-item>
+        <wa-dropdown-item value="paste">
+          <wa-icon slot="icon" name="paste"></wa-icon>
+          Paste
+        </wa-dropdown-item>
+        <wa-divider></wa-divider>
+        <wa-dropdown-item>
+          Show images
+          <wa-dropdown-item slot="submenu" value="show-all-images">Show All Images</wa-dropdown-item>
+          <wa-dropdown-item slot="submenu" value="show-thumbnails">Show Thumbnails</wa-dropdown-item>
+        </wa-dropdown-item>
+        <wa-divider></wa-divider>
+        <wa-dropdown-item type="checkbox" checked value="emoji-shortcuts">Emoji Shortcuts</wa-dropdown-item>
+        <wa-dropdown-item type="checkbox" checked value="word-wrap">Word Wrap</wa-dropdown-item>
+        <wa-divider></wa-divider>
+        <wa-dropdown-item variant="danger" value="delete">
+          <wa-icon slot="icon" name="trash"></wa-icon>
+          Delete
+        </wa-dropdown-item>
+      </wa-dropdown>
     </div>
+    <div id="dropdown-selection" style="margin-top: 1rem; color: var(--wa-color-neutral-600);"></div>
   </div>
 
-  <!-- Badge -->
+  <!-- Form Controls with Validation -->
   <div class="demo-section">
-    <h2>Badges</h2>
-    <div class="component-row">
-      <wa-badge variant="brand">Brand</wa-badge>
-      <wa-badge variant="success">Success</wa-badge>
-      <wa-badge variant="warning">Warning</wa-badge>
-      <wa-badge variant="danger">Danger</wa-badge>
-    </div>
+    <h2>Form Controls with Validation</h2>
+    <form class="demo-form" id="demo-form">
+      <div style="display: grid; gap: 1rem;">
+        <!-- Name Input - Required -->
+        <wa-input
+          name="name"
+          label="Name"
+          placeholder="Enter your name"
+          required
+        ></wa-input>
+
+        <!-- Select - Required -->
+        <wa-select
+          label="Favorite Animal"
+          name="animal"
+          with-clear
+          required
+        >
+          <wa-option value="birds">Birds</wa-option>
+          <wa-option value="cats">Cats</wa-option>
+          <wa-option value="dogs">Dogs</wa-option>
+          <wa-option value="other">Other</wa-option>
+        </wa-select>
+
+        <!-- Checkbox - Required -->
+        <wa-checkbox name="agree" required>
+          I agree to the terms and conditions
+        </wa-checkbox>
+
+        <!-- Form Buttons -->
+        <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+          <wa-button type="submit" variant="brand">Submit</wa-button>
+          <wa-button type="reset" variant="neutral">Reset</wa-button>
+        </div>
+      </div>
+    </form>
+    <div id="form-result" style="margin-top: 1rem; color: var(--wa-color-success-600); font-weight: 500;"></div>
   </div>
 
-  <!-- Progress -->
-  <div class="demo-section">
-    <h2>Progress Bar</h2>
-    <wa-progress-bar value="75"></wa-progress-bar>
-  </div>
 
   <!-- Initialize Web Awesome -->
   <script type="module">
@@ -96,8 +148,59 @@
     import '@awesome.me/webawesome/dist/components/avatar/avatar.js';
     import '@awesome.me/webawesome/dist/components/badge/badge.js';
     import '@awesome.me/webawesome/dist/components/progress-bar/progress-bar.js';
+    import '@awesome.me/webawesome/dist/components/dropdown/dropdown.js';
+    import '@awesome.me/webawesome/dist/components/divider/divider.js';
+    import '@awesome.me/webawesome/dist/components/select/select.js';
+    import '@awesome.me/webawesome/dist/components/option/option.js';
+    import '@awesome.me/webawesome/dist/components/textarea/textarea.js';
+    import '@awesome.me/webawesome/dist/components/checkbox/checkbox.js';
 
     console.log('✅ Web Awesome loaded');
+
+    // Dropdown event listener
+    const dropdown = document.querySelector('wa-dropdown');
+    const selectionDisplay = document.getElementById('dropdown-selection');
+
+    dropdown.addEventListener('wa-select', event => {
+      const item = event.detail.item;
+      const value = item.value || 'no value';
+      selectionDisplay.textContent = `Selected: ${value}`;
+    });
+
+    // Form validation and submission
+    const form = document.getElementById('demo-form');
+    const formResult = document.getElementById('form-result');
+
+    // Wait for form controls to be defined before attaching form listeners
+    await Promise.all([
+      customElements.whenDefined('wa-button'),
+      customElements.whenDefined('wa-checkbox'),
+      customElements.whenDefined('wa-input'),
+      customElements.whenDefined('wa-option'),
+      customElements.whenDefined('wa-select'),
+      customElements.whenDefined('wa-textarea'),
+    ]).then(() => {
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+
+        // Collect form data
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        formResult.textContent = '✅ Form submitted successfully! Check console for data.';
+        formResult.style.color = 'var(--wa-color-success-600)';
+        console.log('Form Data:', data);
+
+        // Clear success message after 3 seconds
+        setTimeout(() => {
+          formResult.textContent = '';
+        }, 3000);
+      });
+
+      form.addEventListener('reset', () => {
+        formResult.textContent = '';
+      });
+    });
 
     /*
     If we want to add our own translations, something along the lines of:
