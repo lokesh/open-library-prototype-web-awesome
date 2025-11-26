@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { resolve } from 'path';
 
 export default defineConfig({
   // Set base path for GitHub Pages
@@ -14,6 +15,10 @@ export default defineConfig({
   build: {
     target: 'es2022',
     rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        dropdown: resolve(__dirname, 'dropdown.html'),
+      },
       output: {
         manualChunks: {
           'webawesome': ['@awesome.me/webawesome']
