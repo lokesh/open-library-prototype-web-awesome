@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Web Awesome Demo</title>
 
-  <!-- Web Awesome Theme -->
-  <link rel="stylesheet" href="/@awesome.me/webawesome/dist/themes/default.css">
-
   <link rel="stylesheet" href="./styles/index.css">
 </head>
 <body>
@@ -111,10 +108,18 @@
 
   <!-- Initialize Web Awesome -->
   <script type="module">
+    // Import the theme CSS
+    import '@awesome.me/webawesome/dist/styles/themes/default.css';
+
     import { setBasePath, registerIconLibrary } from '@awesome.me/webawesome/dist/webawesome.js';
 
-    // Set base path for assets
-    setBasePath('/@awesome.me/webawesome/dist');
+    // Set base path for assets - use CDN or determine dynamically
+    // For production, you can use a CDN or configure a proper path
+    const basePath = import.meta.env.DEV
+      ? '/@awesome.me/webawesome/dist'
+      : 'https://cdn.jsdelivr.net/npm/@awesome.me/webawesome@3/dist';
+
+    setBasePath(basePath);
 
     // Register Font Awesome
     registerIconLibrary('fa', {
