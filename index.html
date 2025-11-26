@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Awesome Demo</title>
+
+  <!-- Web Awesome Theme -->
+  <link rel="stylesheet" href="/@awesome.me/webawesome/dist/themes/default.css">
+
+  <link rel="stylesheet" href="./styles/index.css">
+</head>
+<body>
+  <h1>Web Awesome Component Demo</h1>
+
+  <!-- Icons -->
+  <div class="demo-section">
+    <h2>Font Awesome Icons</h2>
+    <div class="component-row">
+
+      <wa-icon name="heart" library="fa"></wa-icon>
+      <wa-icon name="star" library="fa"></wa-icon>
+      <wa-icon name="user" library="fa"></wa-icon>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="demo-section">
+    <h2>Buttons</h2>
+    <div class="component-row">
+      <wa-button variant="default"><wa-icon slot="start" name="house" label="Home"></wa-icon>Default</wa-button>
+      <wa-button variant="brand">Brand</wa-button>
+      <wa-button variant="success">Success</wa-button>
+      <wa-button variant="danger">Danger</wa-button>
+    </div>
+  </div>
+
+  <!-- Input -->
+  <div class="demo-section">
+    <h2>Input</h2>
+    <wa-input placeholder="Enter your name" clearable>
+      <wa-icon name="user" library="fa" slot="prefix"></wa-icon>
+    </wa-input>
+  </div>
+
+  <!-- Avatar -->
+  <div class="demo-section">
+    <h2>Avatar</h2>
+    <div class="component-row">
+      <wa-avatar initials="LD" style="--size: 3rem;"></wa-avatar>
+      <wa-avatar initials="AB" style="--size: 3rem;"></wa-avatar>
+      <wa-avatar initials="XY" style="--size: 3rem;"></wa-avatar>
+    </div>
+  </div>
+
+  <!-- Badge -->
+  <div class="demo-section">
+    <h2>Badges</h2>
+    <div class="component-row">
+      <wa-badge variant="brand">Brand</wa-badge>
+      <wa-badge variant="success">Success</wa-badge>
+      <wa-badge variant="warning">Warning</wa-badge>
+      <wa-badge variant="danger">Danger</wa-badge>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="demo-section">
+    <h2>Progress Bar</h2>
+    <wa-progress-bar value="75"></wa-progress-bar>
+  </div>
+
+  <!-- Initialize Web Awesome -->
+  <script type="module">
+    import { setBasePath, registerIconLibrary } from '@awesome.me/webawesome/dist/webawesome.js';
+
+    // Set base path for assets
+    setBasePath('/@awesome.me/webawesome/dist');
+
+    // Register Font Awesome
+    registerIconLibrary('fa', {
+      resolver: name => {
+        const filename = name.replace(/^fa[rbs]-/, '');
+        let folder = 'regular';
+        if (name.substring(0, 4) === 'fas-') folder = 'solid';
+        if (name.substring(0, 4) === 'fab-') folder = 'brands';
+        return `https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/svgs/${folder}/${filename}.svg`;
+      },
+      mutator: svg => svg.setAttribute('fill', 'currentColor')
+    });
+
+    // Import components
+    import '@awesome.me/webawesome/dist/components/icon/icon.js';
+    import '@awesome.me/webawesome/dist/components/button/button.js';
+    import '@awesome.me/webawesome/dist/components/input/input.js';
+    import '@awesome.me/webawesome/dist/components/avatar/avatar.js';
+    import '@awesome.me/webawesome/dist/components/badge/badge.js';
+    import '@awesome.me/webawesome/dist/components/progress-bar/progress-bar.js';
+
+    console.log('✅ Web Awesome loaded');
+
+    /*
+    If we want to add our own translations, something along the lines of:
+
+import { registerTranslation } from 'path/to/webawesome.js';
+import type { Translation } from 'path/to/webawesome.js';
+
+const translation: Translation = {
+  $code: 'es',
+  $name: 'Español',
+  $dir: 'ltr',
+
+  term1: '...',
+  term2: '...',
+  ...
+};
+
+registerTranslation(translation);
+
+export default translation;
+*/
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+@import '@awesome.me/webawesome/dist/styles/themes/default.css';
+@import './variables.css';
+
+body {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.demo-section {
+  margin-bottom: 36px;
+}
